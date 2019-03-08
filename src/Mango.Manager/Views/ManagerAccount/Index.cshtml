@@ -1,0 +1,150 @@
+﻿@model Mango.Manager.ViewModels.ManagerPageViewModel
+<table class="table">
+    <tbody>
+        <tr>
+            <td>
+                <input type="button" class="btn btn-success" id="btn_Add" value="添加管理员" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table  table-sm table-hover table-list table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>用户名</th>
+            <th>角色名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model.ListData)
+        {
+        <tr>
+            <td>
+                @row["AdminId"]
+            </td>
+            <td>
+                @row["AdminName"]
+            </td>
+            <td>
+                @row["RoleName"]
+            </td>
+            <td>
+                <a href="javascript:;" class="edit"  data-adminId="@row["AdminId"]" data-adminName="@row["AdminName"]" data-roleId="@row["RoleId"]">修改</a>
+                <a href="javascript:;" class="del" data-adminId="@row["AdminId"]">删除</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>     
+<form id="form_add" class="col-sm-11" style="display:none;" method="post">
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-3 col-form-label">登录账号:</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="adminName" name="adminName" placeholder="登录账号">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword3" class="col-sm-3 col-form-label">登录密码:</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="password" name="password" placeholder="登录密码">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword3" class="col-sm-3 col-form-label">所属角色</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="roleId" name="roleId"></select>
+        </div>
+    </div>
+    <input type="hidden" id="adminId" name="adminId" value="0" />
+</form>   
+    <script type="text/javascript">
+        $(window).ready(function () {
+            $.ajax({
+                type: 'get',
+                url: '/ManagerAccount/GetRoleList',
+                data: '',
+                success: function (result) {
+                    console.log(result);
+                    var jsonData = JSON.parse(result);
+                    var html = '';
+                    $.each(jsonData, function (i) {
+                        html += '<option value="' + jsonData[i].RoleId + '">' + jsonData[i].RoleName + '</option>';
+                    });
+                    $("#roleId").append(html);
+                }
+            });
+        });
+        //添加
+        $("#btn_Add").click(function () {
+            layer.open({
+                type: 1,
+                title: '添加账号:',
+                shadeClose: true,
+                content: $("#form_add"),
+                btn: ['保 存'],
+                area: ['600px', '400px'],
+                btn1: function () {
+                    $("#form_add").ajaxSubmit({
+                        url: '/ManagerAccount/Add',
+                        success: function (result) {
+                            if (result) {
+                                alert("保存成功");
+                                window.location.href = window.location.href;
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        //修改数据
+        $(".edit").click(function () {
+            var adminId = $(this).attr("data-adminId");
+            var adminName = $(this).attr("data-adminName"); 
+            var roleId = $(this).attr("data-roleId");
+            console.log(groupId);
+            $("#adminName").val(adminName);
+            $("#adminId").val(adminId);
+            $("#roleId").val(roleId);
+            layer.open({
+                type: 1,
+                title: '添加账号:',
+                shadeClose: true,
+                content: $("#form_add"),
+                btn: ['保 存'],
+                area: ['600px', '400px'],
+                btn1: function () {
+                    $("#form_add").ajaxSubmit({
+                        url: '/ManagerAccount/Edit',
+                        success: function (result) {
+                            if (result) {
+                                alert("保存成功");
+                                window.location.href = window.location.href;
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        //删除数据
+        $(".del").click(function () {
+            if (!confirm("确定删除该数据？")) {
+                $(this).attr("href", "#");
+            }
+            else {
+                var id = $(this).attr("data-adminId").val();
+                $.ajax({
+                    type: 'post',
+                    url: '/ManagerAccount/Delete',
+                    data: 'adminId=' + id,
+                    success: function (result) {
+                        if (result) {
+                            alert("删除成功");
+                            window.location.href = window.location.href;
+                        }
+                    }
+                });
+            }
+        });
+    </script>

@@ -3,3 +3,20 @@
 ################################################################################
 
 /.vs
+/src/.vs/Mango.ProjectManagementTool/v15
+/src/Mango.Common/bin
+/src/Mango.Common/obj
+/src/Mango.Entity/bin
+/src/Mango.Entity/obj
+/src/Mango.Framework.Core/bin
+/src/Mango.Framework.Core/obj
+/src/Mango.Framework.EFCore/bin
+/src/Mango.Framework.EFCore/obj
+/src/Mango.Framework.Services/bin
+/src/Mango.Framework.Services/obj
+/src/Mango.Manager/bin
+/src/Mango.Manager/obj
+/src/Mango.Models/bin
+/src/Mango.Models/obj
+/src/Mango.Repository/bin
+/src/Mango.Repository/obj

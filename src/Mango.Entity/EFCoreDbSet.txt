@@ -1,0 +1,1 @@
+public virtual DbSet<m_CustomerServiceGroup> m_CustomerServiceGroup { get; set; }
